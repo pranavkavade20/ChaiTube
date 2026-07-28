@@ -2,6 +2,7 @@
   "name": "chaitube",
   "version": "1.0.0",
   "description": "This video streaming web app.",
+  "types": "module",
   "keywords": [
     "javascript",
     "backend",
@@ -10,9 +11,11 @@
   ],
   "license": "ISC",
   "author": "Pranav Kavade",
-  "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev":"nodemon src/index.js"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.14"
   }
 }
