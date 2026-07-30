@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
+// User model schema defines the shape of user documents in MongoDB.
 const userSchema = new Schema(
     {
         username: {
@@ -32,6 +33,7 @@ const userSchema = new Schema(
         coverImage: {
             type: String,
         },
+        // Store references to videos watched by the user for watch history.
         watchHistory: [
             {
                 type: Schema.Types.ObjectId,
@@ -51,7 +53,7 @@ const userSchema = new Schema(
     }
 )
 
-// Encryption for Password using "bcrypt" package
+// Hash the password before saving when it has changed.
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
 
@@ -59,13 +61,12 @@ userSchema.pre("save", async function (next) {
     next()
 })
 
-// Encryption comparison with password and Hashed password
-
+// Compare a plain text password against the stored hashed password.
 userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
-// Generate Access Token
+// Generate a JWT access token containing user identity claims.
 userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
@@ -81,7 +82,7 @@ userSchema.methods.generateAccessToken = function () {
         }
     )
 }
-// Generate Refresh Token
+// Generate a JWT refresh token used to obtain new access tokens.
 userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
@@ -94,6 +95,5 @@ userSchema.methods.generateRefreshToken = function () {
         }
     )
 }
-
 
 export const User = mongoose.model("User", userSchema)
