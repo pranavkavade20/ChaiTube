@@ -27,11 +27,11 @@ const userSchema = new Schema(
             index: true
         },
         avatar: {
-            type: String, // cloudinary url
+            type: String,   // cloudinary url
             required: true,
         },
         coverImage: {
-            type: String,
+            type: String,   // cloudinary url
         },
         // Store references to videos watched by the user for watch history.
         watchHistory: [
@@ -54,11 +54,10 @@ const userSchema = new Schema(
 )
 
 // Hash the password before saving when it has changed.
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
 
     this.password = await bcrypt.hash(this.password, 10)
-    next()
 })
 
 // Compare a plain text password against the stored hashed password.
